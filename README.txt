@@ -1,0 +1,50 @@
+LIST OF FILES/FOLDERS:
+
+-------------------------------------SERVER FOLDER-----------------------------------------------------------------------
+1.fileserver.c : This file creates a central server. File takes one commandline input arguments ie own listning port.
+Clients will use Server IP and port to connect this server for publish and search files.
+The code has following main operations:
+JOIN : Whenever new client want to join network, server will be connected
+PUBLISH : Clients can publish file to server for sharing with filename,filepath and 
+their port no.Details of the file will be stored in publish list file. (filelist.txt)
+SEARCH : Clients can search file using keyword . It uses bash script (searchscript.sh) for searching file in publish list.
+
+2.filelist.txt :This file contains the list of files published by the peers.This file is maintained by server.It contains details in format:
+file_name file_path peer_portno peer_IP_address
+
+3.searchscript.sh : This shell script is used by server to search the file using keyword in the published file list(filelist.txt) and create the output which is then send to client.The output will contain details of peers containing the given file.The peer IP,port NO and file path.
+
+4.peerIPList.txt : This file contains log of IP addresses of the all peers which has connected with the server since it's up. It's maintained by server. 
+
+------------------------------CLIENT FOLDER-------------------------------------------------------------------------------------
+1.fileclient.c : This file creates a peer. File takes three commandline input arguments server-ip,server port and own listning port.
+Server IP and port will be used to connect the server and publish and search files.
+Own listening port will be used to listen to incoming fetch requests from other peers.
+The code has following main operations:
+JOIN : Connects the peer server
+PUBLISH : Publish file to server for sharing with filename,filepath and own port no.
+SEARCH : Search file using keyword from server
+FETCH :Fetch desired file from client using client IP,Port no, filename and path.If no path is given,file will be saved/fetched from client folder.The code also handle incoming file fetch requests from other clients in the background.
+
+2. p2p-files folder : All files which client want to upload or download will be kept in this folder.Each client should have this folder else can result in errors.To fetch file from p2p folder, destination folder should be ./p2p-files/<filename.extn> while fetching
+------------------------------------------------------------------------------------------------------------------------------------
+HOW TO RUN SERVER:
+
+1. Open server folder.
+2. Run make or gcc fileserver.c -o server //to compile the c code
+3. Run ./server <port no>
+
+---------------------------------------------------------------------------------------------------------------------------------------
+HOW TO RUN CLIENT:
+
+1. Open client folder.
+2. Run make or gcc fileclient.c -o client //to compile the c code
+3. Run ./client <server IP address> <Server listening port no> <Own listening port no for peers>
+4. Follow commands on screen for file publish,search and fetch.
+		Option1 Publish a file. Format: Filename with extension, file path(if reqd), own listening port
+		Option2 Search filr. Format: Filename
+		Option3 Fetch. Format: Filename only(if current directory) or ./p2p-files/<filename.extn> (if file in p2p-files folder) , clientIP and port No 
+		Option4 Terminate connection to server. To terminate the connection to server so that server is free to handle more clients
+		Option5 Exit.
+ ------------------------------------------------------------------------------------------------------------------------------------
+
